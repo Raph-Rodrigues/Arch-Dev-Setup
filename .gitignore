@@ -1,0 +1,30 @@
+# Cache e temporários
+*.cache/
+*.log
+*~
+.DS_Store
+
+# Secrets (nunca commitar!)
+**/secrets/
+**/.env
+
+# Arquivos gerados
+*.pyc
+__pycache__/
+*.o
+*.so
+
+# Wallpapers (muito pesados para Git)
+themes/wallpapers/*.jpg
+themes/wallpapers/*.png
+themes/wallpapers/*.gif
+!themes/wallpapers/.gitkeep
+
+# Matugen generated (será regenerado)
+config/matugen/generated/
+
+# Symlinks temporários
+config/hypr/themes/current.conf
+
+# Logs
+logs/
