@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONF=/etc/sddm/weather.conf
+[ -f "$CONF" ] && source "$CONF"
+
+: "${LAT:?LAT missing in $CONF}"
+: "${LON:?LON missing in $CONF}"
+: "${UNIT:=C}"   # C or F
+
+if [[ "$UNIT" =~ ^[Ff]$ ]]; then
+  UNIT_Q="fahrenheit"
+  SUFFIX="°F"
+else
+  UNIT_Q="celsius"
+  SUFFIX="°C"
+fi
+
+URL="https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,is_day&temperature_unit=${UNIT_Q}"
+
+json="$(curl -fsSL "$URL")" || json=""
+if [[ -z "$json" ]]; then
+  echo "" > /run/sddm-weather.txt
+  exit 0
+fi
+
+# Extract values
+tmp="$(printf '%s' "$json" | jq -r '.current.temperature_2m // empty')"
+wcode="$(printf '%s' "$json" | jq -r '.current.weather_code // empty')"
+isday="$(printf '%s' "$json" | jq -r '.current.is_day // 1')"
+
+# Round temperature
+if [[ -n "${tmp:-}" ]]; then
+  temp_int=$(awk -v t="$tmp" 'BEGIN{printf("%.0f", t)}')
+else
+  temp_int=""
+fi
+
+# Map WMO weather_code to emoji (with basic day/night variants)
+emoji_for() {
+  local code="$1" day="$2"
+  case "$code" in
+    0)   [[ "$day" = "1" ]] && echo "☀️" || echo "🌙" ;;             # Clear
+    1)   [[ "$day" = "1" ]] && echo "🌤️" || echo "🌙";;              # Mainly clear
+    2)   [[ "$day" = "1" ]] && echo "⛅️" || echo "☁️";;              # Partly cloudy
+    3)   echo "☁️" ;;                                                # Overcast
+    45|48) echo "🌫️" ;;                                             # Fog
+    51|53|55) echo "🌦️" ;;                                          # Drizzle
+    56|57) echo "🌧️" ;;                                             # Freezing drizzle
+    61|63|65) echo "🌧️" ;;                                          # Rain
+    66|67) echo "🌧️" ;;                                             # Freezing rain
+    71|73|75|77) echo "🌨️" ;;                                       # Snow / grains
+    80|81|82) echo "🌦️" ;;                                          # Rain showers
+    85|86) echo "🌨️" ;;                                             # Snow showers
+    95) echo "⛈️" ;;                                                # Thunderstorm
+    96|99) echo "⛈️" ;;                                             # Thunderstorm + hail
+    *) echo "🌡️" ;;                                                 # Fallback
+  esac
+}
+
+emoji="$(emoji_for "${wcode:-}" "${isday:-1}")"
+
+# Compose line
+if [[ -n "$temp_int" ]]; then
+  out="${emoji} ${temp_int}${SUFFIX}"
+else
+  out="${emoji}"
+fi
+
+# Write for greeter
+outfile="/run/sddm-weather.txt"
+printf '%s\n' "$out" > "$outfile"
+chmod 0644 "$outfile"
+chown sddm: "$outfile" 2>/dev/null || true

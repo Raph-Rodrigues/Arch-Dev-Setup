@@ -1,0 +1,346 @@
+{
+  "reload_style_on_change": true,
+  "exclusive": true,
+  "passthrough": false,
+  "position": "top",
+  "margin-top": 15,
+  "modules-left": [
+    "group/omarchy",
+    "hyprland/workspaces",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "custom/pacman",
+    "clock",
+    "custom/ScrollMPRIS",
+    "custom/update",
+    "custom/voxtype",
+    "custom/screenrecording-indicator"
+  ],
+  "modules-right": [
+    "group/tray-expander",
+    "bluetooth",
+    "network",
+    "group/audio",
+    "battery"
+  ],
+  "hyprland/workspaces": {
+    "format": "{id} {windows}",
+    "window-rewrite-default": "󰣆",
+    "window-rewrite": {
+      // === REGRAS POR TÍTULO (Alta Prioridade) ===
+      // Necessário para apps que rodam no terminal ou abas de navegador
+      "title<.*github.*>": "",
+      "title<.*youtube.*>": "",
+      "title<.*whatsapp.*>": "",
+      "title<.*discord.*>": "",
+      "title<.*twitch.*>": "",
+      "title<.*outlook.*>": "",
+      "title<.*gmail.*>": "",
+      "title<.*LinuxToys.*>": "",
+      // Editores no Terminal (Vim/Neovim/Nano)
+      "title<.*nvim.*>": "",
+      "title<.*vim.*>": "",
+      "title<.*nano.*>": "󱃷",
+      // === REGRAS POR CLASSE DO APP ===
+      // --- Navegadores ---
+      "class<firefox>": "",
+      "class<zen>": "",
+      "class<google-chrome>": "",
+      "class<chromium>": "",
+      "class<brave-browser>": "",
+      "class<microsoft-edge>": "",
+      "class<tor-browser>": "",
+      // --- Desenvolvimento / IDEs ---
+      "class<code|vscode|codium>": "󰨞", // VS Code
+      "class<dev.zed.Zed>": "", // Zed Editor (ou )
+      "class<github desktop>": "", // GitHub Desktop
+      "class<sublime_text>": "",
+      "class<godot>": "",
+      "class<unityhub|unity>": "",
+      // JetBrains
+      "class<jetbrains-idea>": "", // IntelliJ IDEA
+      "class<jetbrains-clion>": "", // CLion
+      "class<jetbrains-pycharm>": "", // PyCharm (Python)
+      "class<jetbrains-webstorm>": "", // WebStorm
+      "class<jetbrains-goland>": "", // GoLand
+      "class<jetbrains-rider>": "", // Rider
+      "class<jetbrains-studio>": "", // Android Studio
+      // --- Terminais ---
+      "class<kitty|alacritty|foot|wezterm|ghostty>": "",
+      // --- Mensageiros e Social ---
+      "class<discord|vesktop|webcord>": "",
+      "class<signal>": "",
+      "class<telegram-desktop>": "",
+      "class<slack>": "",
+      "class<teams>": "󰊻",
+      // --- Jogos e Lojas ---
+      "class<steam>": "", // Steam Launcher
+      "class<lutris>": "",
+      "class<heroic>": "",
+      "class<steam_app_.*>": "", // Qualquer jogo da Steam
+      "class<minecraft.*>": "", // Minecraft
+      // --- Mídia e Design ---
+      "class<spotify>": "",
+      "class<mpv>": "",
+      "class<vlc>": "󰕼",
+      "class<obs>": "", // OBS Studio (Câmera)
+      "class<gimp.*>": "",
+      "class<inkscape>": "",
+      "class<blender>": "",
+      "class<kdenlive>": "",
+      // --- Produtividade e Notas ---
+      "class<obsidian>": "",
+      "class<typora>": "",
+      "class<libreoffice-writer>": "",
+      "class<libreoffice-calc>": "",
+      "class<libreoffice-impress>": "",
+      "class<anytype>": "",
+      // --- Sistema e Arquivos ---
+      "class<thunar|nautilus|dolphin|nemo|pcmanfm>": "󰝰",
+      "class<org.kde.ark|file-roller>": "󰇉", // Arquivos compactados
+      "class<thunderbird>": "",
+      "class<bitwarden>": "",
+      "class<pavucontrol>": "",
+      "class<bleachbit>": "",
+      "class<wootility-lekker>": "",
+      "class<nwg-look>": "",
+      "class<stacer>": ""
+    },
+    "on-click": "activate",
+    "persistent-workspaces": {
+      "*": 5, // 5 workspaces by default on every monitor
+      "HDMI-A-1": 3 // but only three on HDMI-A-1
+    }
+  },
+  "hyprland/window": {
+    "format": "{}", // Mostra o título da janela
+    "separate-outputs": true, // Janela ativa por monitor
+    "max-length": 42, // Limita o tamanho do texto
+    "rewrite": { // Simplifica nomes de janelas
+      "(.*) - Mozilla Firefox": "Firefox",
+      "(.*) - Alacritty": "$1",
+      "(.*) - Obsidian": "Notes",
+      "(.*) - Kitty": "$1"
+    }
+  },
+  "group/omarchy": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 600,
+      "children-class": "tray-group-item"
+    },
+    "modules": [
+      "custom/omarchy",
+      "temperature",
+      "cpu",
+      "disk",
+      "memory"
+    ]
+  },
+  "custom/omarchy": {
+    "format": "<span font='omarchy'>\ue900</span>",
+    "on-click": "omarchy-menu",
+    "on-click-right": "xdg-terminal-exec",
+    "tooltip-format": "Omarchy Menu\n\nSuper + Alt + Space"
+  },
+  "custom/ScrollMPRIS": {
+    "return-type": "json",
+    "exec": "ScrollMPRIS -s 75 -w 22 -b firefox,mpv --scroll wrapping --format '{title} - {artist}' --tooltip-format '{title} - {artist} - {album}'",
+    "escape": true,
+    "on-click": "playerctl play-pause"
+  },
+  "custom/update": {
+    "format": "",
+    "exec": "omarchy-update-available",
+    "on-click": "omarchy-launch-floating-terminal-with-presentation omarchy-update",
+    "tooltip-format": "Omarchy update available",
+    "signal": 7,
+    "interval": 21600
+  },
+  "custom/pacman": {
+    "format": "󰮯 {}",
+    "interval": "3600",
+    "exec": "checkupdates | wc -l",
+    "on-click": "kitty --hold paru -Syu",
+    "signal": 8,
+    "tooltip": true,
+    "tooltip-format": "{} pacman updates avalable"
+  },
+  "cpu": {
+    "interval": 5,
+    "format": " 󰍛 |",
+    "on-click": "omarchy-launch-or-focus-tui btop",
+    "on-click-right": "alacritty"
+  },
+  "disk": {
+    "interval": 30,
+    "format": "  {percentage_free}% remaining | ",
+    "unit": "GB",
+    // 0.25 GB out of 2000.00 GB available. Alternatively 241.3MiB out of 1.9TiB available.
+    "tooltip": true,
+    "tooltip-format": "{free} out of {total} available"
+  },
+  "temperature": {
+    // "thermal-zone": 2,
+    // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+    // "critical-threshold": 80,
+    "format-critical": "{temperatureC}°C  |",
+    "format": "{temperatureC}°C  |"
+  },
+  "memory": {
+    "interval": 30,
+    "format": "{used:0.1f}G/{total:0.1f}G  ",
+    "tooltip": true,
+    "tooltip-format": "Memory percentage:\n{percentage}%\n\nSwap use:\n{swapUsed:0.1f}G/{swapTotal:0.1f}G"
+  },
+  "clock": {
+    "format": "{:L%A %H:%M} ",
+    "format-alt": "{:L%d %B W%V %Y}",
+    "tooltip": false,
+    "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
+  },
+  "network": {
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format": "{icon}",
+    "format-wifi": "{icon}",
+    "format-ethernet": "󰀂",
+    "format-disconnected": "󰤮",
+    "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
+    "interval": 3,
+    "spacing": 1,
+    "on-click": "omarchy-launch-wifi"
+  },
+  "battery": {
+    "format": "{capacity}% {icon}",
+    "format-discharging": "{icon}",
+    "format-charging": "{icon}",
+    "format-plugged": "",
+    "format-icons": {
+      "charging": [
+        "󰢜",
+        "󰂆",
+        "󰂇",
+        "󰂈",
+        "󰢝",
+        "󰂉",
+        "󰢞",
+        "󰂊",
+        "󰂋",
+        "󰂅"
+      ],
+      "default": [
+        "󰁺",
+        "󰁻",
+        "󰁼",
+        "󰁽",
+        "󰁾",
+        "󰁿",
+        "󰂀",
+        "󰂁",
+        "󰂂",
+        "󰁹"
+      ]
+    },
+    "format-full": "󰂅",
+    "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+    "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+    "interval": 5,
+    "on-click": "omarchy-menu power",
+    "states": {
+      "warning": 20,
+      "critical": 10
+    }
+  },
+  "bluetooth": {
+    "format": "",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱",
+    "format-no-controller": "",
+    "tooltip-format": "Devices connected: {num_connections}",
+    "on-click": "omarchy-launch-bluetooth"
+  },
+  "group/audio": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 600,
+      "children-class": "tray-group-item"
+    },
+    "modules": [
+      "pulseaudio",
+      "pulseaudio/slider"
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon}",
+    "on-click": "omarchy-launch-audio",
+    "on-click-right": "pamixer -t",
+    "tooltip-format": "Playing at {volume}%",
+    "scroll-step": 5,
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 100,
+    "orientation": "horizontal"
+  },
+  "group/tray-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 600,
+      "children-class": "tray-group-item"
+    },
+    "modules": [
+      "custom/expand-icon",
+      "tray"
+    ]
+  },
+  "custom/expand-icon": {
+    "format": "",
+    "tooltip": false,
+    "on-scroll-up": "",
+    "on-scroll-down": "",
+    "on-scroll-left": "",
+    "on-scroll-right": ""
+  },
+  "custom/screenrecording-indicator": {
+    "on-click": "omarchy-cmd-screenrecord",
+    "exec": "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh",
+    "signal": 8,
+    "return-type": "json"
+  },
+  "custom/voxtype": {
+    "exec": "omarchy-voxtype-status",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+      "idle": "",
+      "recording": "󰍬",
+      "transcribing": "󰔟"
+    },
+    "tooltip": true,
+    "on-click-right": "omarchy-voxtype-config",
+    "on-click": "omarchy-voxtype-model"
+  },
+  "tray": {
+    "icon-size": 12,
+    "spacing": 17
+  }
+}
