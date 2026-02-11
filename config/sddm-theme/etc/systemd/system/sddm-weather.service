@@ -1,0 +1,6 @@
+[Unit]
+Description=Update weather string for SDDM
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-sddm-weather
